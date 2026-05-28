@@ -64,10 +64,6 @@ void batalhaNavalC() {
         printf("\n");
     }
 
-
-
-
-
     printf("\n");
     printf("\nJogo finalizado!\n");
     printf("\n");
