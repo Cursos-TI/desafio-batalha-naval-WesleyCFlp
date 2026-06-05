@@ -24,14 +24,15 @@ void batalhaNavalC() {
         {"10 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "}
     };
 
-    // Variáveis para definir a posição do navio 1
+    // Primeiro Navio
+    // Variáveis para definir a posição do navio 
     int linha1, coluna1, pontaDireita1, pontaEsquerda1;
     linha1 = 5;
     coluna1 = 5;
     pontaDireita1 = 6; // A posição da ponta direita é a linha + 1
     pontaEsquerda1 = 4; // A posição da ponta esquerda é a linha - 1
 
-    // Loop para definir a posição do primeiro navio
+    // Loop para definir a posição do navio
     for (int i = 0; i <= linha1 + 1; i++) {
         for (int j = 0; j < 11; j++) {
             if (i == linha1 && (j == coluna1 || j == pontaDireita1 || j == pontaEsquerda1)) {
@@ -40,21 +41,59 @@ void batalhaNavalC() {
         }
     }
 
-    // Variáveis para definir a posição do navio 2
-    int linha2, coluna2, pontaCima2, pontaBaixo2;
+    // Segundo Navio
+    // Variáveis para definir a posição do navio
+    int linha2, coluna2, pontaDireita2, pontaEsquerda2;
     linha2 = 6;
     coluna2 = 7;
-    pontaCima2 = 5; // A posição da ponta direita é a linha - 1
-    pontaBaixo2 = 7; // A posição da ponta esquerda é a linha + 1
+    pontaDireita2 = 5; // A posição da ponta direita é a linha - 1
+    pontaEsquerda2 = 7; // A posição da ponta esquerda é a linha + 1
 
-    // Loop para definir a posição do segundo navio
+    // Loop para definir a posição do navio
     for (int k = 0; k < 11; k++) {
         for (int l = 0; l <= coluna2 + 1; l++) {
-            if (l == coluna2 && (k == linha2 || k == pontaCima2 || k == pontaBaixo2)) {
+            if (l == coluna2 && (k == linha2 || k == pontaDireita2 || k == pontaEsquerda2)) {
                 tabuleiro[k][l] = " 3 ";
             }
         }
     }
+
+    // Terceiro Navio
+    // Diagonal Principal
+    // Variáveis para definir a posição do navio
+    int linha3, coluna3, pontaDireita3, pontaEsquerda3;
+    linha3 = 2;
+    coluna3 = 2;
+    pontaDireita3 = 3; // A posição da ponta direita é a linha + 1 e coluna + 1
+    pontaEsquerda3 = 1; // A posição da ponta esquerda é a linha - 1 e coluna - 1
+
+    // Loop para definir a posição do navio
+    for (int m = 0; m < 11; m++) {
+        for (int n = 0; n < 11; n++) {
+            if ((m == linha3 && n == coluna3) || (m == pontaDireita3 && n == pontaDireita3) || (m == pontaEsquerda3 && n == pontaEsquerda3)) {
+                tabuleiro[m][n] = " 3 ";
+            }
+        }
+    }
+
+    // Quarto Navio
+    // Diagonal Secundária
+    // Variáveis para definir a posição do navio
+    int linha4, coluna4, pontaDireita4, pontaEsquerda4;
+    linha4 = 8;
+    coluna4 = 3;
+    pontaDireita4 = 7; // A posição da ponta direita é a linha - 1 e coluna + 1
+    pontaEsquerda4 = 9; // A posição da ponta esquerda é a linha + 1 e coluna - 1
+
+    // Loop para definir a posição do navio
+    for (int o = 0; o < 11; o++) {
+        for (int p = 0; p < 11; p++){
+            if ((o == linha4 && p == coluna4) || (o == pontaDireita4 && p == (coluna4 + 1)) || (o == pontaEsquerda4 && p == (coluna4 - 1))) {
+                tabuleiro[o][p] = " 3 ";
+            }
+        }
+    }
+
 
     // Loop para imprimir o tabuleiro
     for (int m = 0; m < 11; m++) {
