@@ -1,16 +1,21 @@
-#include <stdio.h>
+ #include <stdio.h>
 #include <stdbool.h>
+
+#define LINHAS 11
+#define COLUNAS 11
+
 
 // Funções para aproveitamento de código
 void regrasDoJogo() {
     printf("\n==================================== Regras do jogo! ====================================\n");
     printf("\nBatalha Naval é um jogo clássico de estratégia e raciocínio lógico onde dois participantes disputam entre si. O objetivo é afundar a frota inimiga em um tabuleiro de coordenadas. Cada jogador posiciona secretamente seus navios e, por turnos, atira informando letras e números. Vence quem destruir todos os navios do oponente primeiro\n");
+    printf("Legenda do tabuleiro: \n0 - Água\n1 - Área de ataque\n3 - Navio");
 }
 
 void batalhaNavalC() {
     printf("\n==================================== Jogo iniciado! ====================================\n");
 
-    char * tabuleiro[11][11] = {
+    char * tabuleiroNavios[LINHAS][COLUNAS] = {
         {" - ",  " A ", " B ", " C ", " D ", " E ", " F ", " G ", " H ", " I ", " J "},
         {" 1 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
         {" 2 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
@@ -24,6 +29,94 @@ void batalhaNavalC() {
         {"10 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "}
     };
 
+    char * tabuleiroAtaques[LINHAS][COLUNAS] = {
+        {" - ",  " A ", " B ", " C ", " D ", " E ", " F ", " G ", " H ", " I ", " J "},
+        {" 1 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {" 2 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {" 3 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {" 4 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {" 5 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {" 6 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {" 7 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {" 8 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {" 9 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "},
+        {"10 ",  " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 ", " 0 "}
+    };
+
+    // Definindo alcance de cada ataque através de matrizes - Ataque em forma de cone com o ponto incial no centro
+    char * ataqueCone[3][5] = {
+        {" 0 ", " 0 ", " 1 ", " 0 ", " 0 "},
+        {" 0 ", " 1 ", " 1 ", " 1 ", " 0 "},
+        {" 1 ", " 1 ", " 1 ", " 1 ", " 1 "}
+    };
+
+    // Ponto de inserção do ataque em forma de cone
+    int ataqueConeLinhas = 1;
+    int ataqueConeColunas = 1;
+
+    // Loop para definir o alcance do ataque em forma de cone no tabuleiro de ataques
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 5; j++) {
+            for (int k = 0; k < LINHAS; k++) {
+                for (int l = 0; l < COLUNAS; l++) {
+                    if (k == ataqueConeLinhas + i && l == ataqueConeColunas + j) {
+                        tabuleiroAtaques[k][l] = ataqueCone[i][j];
+                    }
+                }
+            }
+        }
+    }
+
+    // Ataque em forma de cruz com o ponto inicial no centro
+    char *  ataqueCruz[3][5] = {
+        {" 0 ", " 0 ", " 1 ", " 0 ", " 0 "},
+        {" 0 ", " 1 ", " 1 ", " 1 ", " 0 "},
+        {" 0 ", " 0 ", " 1 ", " 0 ", " 0 "}
+    };
+
+    // Ponto de inserção do ataque em forma de cruz
+    int ataqueCruzLinhas = 1;
+    int ataqueCruzColunas = 1;
+
+    // Loop para definir o alcance do ataque em forma de cruz no tabuleiro de ataques
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 5; j++) {
+            for (int k = 0; k < LINHAS; k++) {
+                for (int l = 0; l < COLUNAS; l++) {
+                    if (k == ataqueCruzLinhas + i && l == ataqueCruzColunas + j) {
+                        tabuleiroAtaques[k + 5][l + 5] = ataqueCruz[i][j];
+                    }
+                }
+            }
+        }
+    }
+
+    // Ataque em forma de octaedro com o ponto inicial no centro
+    char *  ataqueOctaedro[5][5] = {
+        {" 0 ", " 0 ", " 1 ", " 0 ", " 0 "},
+        {" 0 ", " 1 ", " 1 ", " 1 ", " 0 "},
+        {" 1 ", " 1 ", " 1 ", " 1 ", " 1 "},
+        {" 0 ", " 1 ", " 1 ", " 1 ", " 0 "},
+        {" 0 ", " 0 ", " 1 ", " 0 ", " 0 "}
+    };
+
+    // Ponto de inserção do ataque em forma de octaedro(losangolo)
+    int ataqueOctaedroLinhas = 1;
+    int ataqueOctaedroColunas = 1;
+
+    // Loop para definir o alcance do ataque em forma de octaedro no tabuleiro de ataques
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            for (int k = 0; k < LINHAS; k++) {
+                for (int l = 0; l < COLUNAS; l++) {
+                    if (k == ataqueOctaedroLinhas + i && l == ataqueOctaedroColunas + j) {
+                        tabuleiroAtaques[k + 5][l] = ataqueOctaedro[i][j];
+                    }
+                }
+            }
+        }
+    }
+
     // Primeiro Navio
     // Variáveis para definir a posição do navio 
     int linha1, coluna1, pontaDireita1, pontaEsquerda1;
@@ -34,12 +127,13 @@ void batalhaNavalC() {
 
     // Loop para definir a posição do navio
     for (int i = 0; i <= linha1 + 1; i++) {
-        for (int j = 0; j < 11; j++) {
+        for (int j = 0; j < COLUNAS; j++) {
             if (i == linha1 && (j == coluna1 || j == pontaDireita1 || j == pontaEsquerda1)) {
-                tabuleiro[i][j] = " 3 ";
+                tabuleiroNavios[i][j] = " 3 ";
             }
         }
     }
+
 
     // Segundo Navio
     // Variáveis para definir a posição do navio
@@ -50,16 +144,15 @@ void batalhaNavalC() {
     pontaEsquerda2 = 7; // A posição da ponta esquerda é a linha + 1
 
     // Loop para definir a posição do navio
-    for (int k = 0; k < 11; k++) {
-        for (int l = 0; l <= coluna2 + 1; l++) {
-            if (l == coluna2 && (k == linha2 || k == pontaDireita2 || k == pontaEsquerda2)) {
-                tabuleiro[k][l] = " 3 ";
+    for (int i = 0; i < LINHAS; i++) {
+        for (int j = 0; j <= coluna2 + 1; j++) {
+            if (j == coluna2 && (i == linha2 || i == pontaDireita2 || i == pontaEsquerda2)) {
+                tabuleiroNavios[i][j] = " 3 ";
             }
         }
     }
 
-    // Terceiro Navio
-    // Diagonal Principal
+    // Terceiro Navio - Diagonal Principal
     // Variáveis para definir a posição do navio
     int linha3, coluna3, pontaDireita3, pontaEsquerda3;
     linha3 = 2;
@@ -68,16 +161,15 @@ void batalhaNavalC() {
     pontaEsquerda3 = 1; // A posição da ponta esquerda é a linha - 1 e coluna - 1
 
     // Loop para definir a posição do navio
-    for (int m = 0; m < 11; m++) {
-        for (int n = 0; n < 11; n++) {
-            if ((m == linha3 && n == coluna3) || (m == pontaDireita3 && n == pontaDireita3) || (m == pontaEsquerda3 && n == pontaEsquerda3)) {
-                tabuleiro[m][n] = " 3 ";
+    for (int i = 0; i < LINHAS; i++) {
+        for (int j = 0; j < COLUNAS; j++) {
+            if ((i == linha3 && j == coluna3) || (i == pontaDireita3 && j == pontaDireita3) || (i == pontaEsquerda3 && j == pontaEsquerda3)) {
+                tabuleiroNavios[i][j] = " 3 ";
             }
         }
     }
 
-    // Quarto Navio
-    // Diagonal Secundária
+    // Quarto Navio - Diagonal Secundária
     // Variáveis para definir a posição do navio
     int linha4, coluna4, pontaDireita4, pontaEsquerda4;
     linha4 = 8;
@@ -86,19 +178,29 @@ void batalhaNavalC() {
     pontaEsquerda4 = 9; // A posição da ponta esquerda é a linha + 1 e coluna - 1
 
     // Loop para definir a posição do navio
-    for (int o = 0; o < 11; o++) {
-        for (int p = 0; p < 11; p++){
-            if ((o == linha4 && p == coluna4) || (o == pontaDireita4 && p == (coluna4 + 1)) || (o == pontaEsquerda4 && p == (coluna4 - 1))) {
-                tabuleiro[o][p] = " 3 ";
+    for (int i = 0; i < LINHAS; i++) {
+        for (int j = 0; j < COLUNAS; j++){
+            if ((i == linha4 && j == coluna4) || (i == pontaDireita4 && j == (coluna4 + 1)) || (i == pontaEsquerda4 && j == (coluna4 - 1))) {
+                tabuleiroNavios[i][j] = " 3 ";
             }
         }
     }
 
 
-    // Loop para imprimir o tabuleiro
-    for (int m = 0; m < 11; m++) {
-        for (int n = 0; n < 11; n++) {
-            printf("%s ", tabuleiro[m][n]);
+    // Loop para imprimir o tabuleiro informando a posição dos navios
+    printf("\nTabuleiro dos navios:\n");
+    for (int i = 0; i < LINHAS; i++) {
+        for (int j = 0; j < COLUNAS; j++) {
+            printf("%s ", tabuleiroNavios[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Loop para imprimir o tabuleiro informando as áreas de ataque
+    printf("\nTabuleiro dos ataques:\n");
+    for (int i = 0; i < LINHAS; i++) {
+        for (int j = 0; j < COLUNAS; j++) {
+            printf("%s ", tabuleiroAtaques[i][j]);
         }
         printf("\n");
     }
@@ -112,7 +214,6 @@ void creditosCriacao() {
     printf("\n==================================== Créditos ====================================\n");
     printf("\nBem-vindo à aba dos créditos!\nO intuito dessa aba é dar créditos ao criador desse sistema, Wesley Amaral de Carvalho. Esse sistema foi feito durante sua primeira graduação, bacharelado em Ciências da Computação, na instituição Newton Paiva Wyden, Alípio de Melo polo EAD.\n");
 }
-
 
 
 int main() {                                   // Jogo de batalha naval em C
